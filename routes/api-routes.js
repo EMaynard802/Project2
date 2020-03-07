@@ -8,6 +8,7 @@ module.exports = function(app) {
   // Otherwise the user will be sent an error
   app.post("/api/login", passport.authenticate("local"), function(req, res) {
     res.json(req.user);
+
   });
 
   // Route for signing up a user. The user's password is automatically hashed and stored securely thanks to
@@ -31,6 +32,30 @@ module.exports = function(app) {
     req.logout();
     res.redirect("/");
   });
+
+  app.get("/api/category", function(req, res){
+    db.Category.findAll({}).then(function(dbCategory){
+      res.json(dbCategory);
+    });
+    //
+  });
+
+
+  // app.post("/api/order", function(req, res){
+  //   //var categoryList = ["eletronics", "sports", "toys"];
+  //   for (var i = 0; i <categoryList.length; i++)
+  //   {
+  //     // var newlist = 
+  //     db.Category.create({
+  //     category_name: categoryList[i]
+  //   }).then(function(dbCategory) {
+  //     // We have access to the new todo as an argument inside of the callback function
+  //     // dbCategory.push(newlist)
+  //     res.json(dbCategory);
+  //   });
+  //   }
+  // });
+
 
   // Route for getting some data about our user to be used client side
   app.get("/api/user_data", function(req, res) {
