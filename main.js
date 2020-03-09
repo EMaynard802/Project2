@@ -1,9 +1,10 @@
-$(document).ready(function() {
+// $(document).ready(function() {
 
     var unirest = require("unirest");
     var req = unirest("GET", "https://amazon-price1.p.rapidapi.com/search");
     var categorySelect = $("#category");
-    var keyword = categorySelect.val();
+    var userInput = categorySelect.val();
+    var currency = $("#currency").val();
 
     $.get("/api/user_data").then(function(data) {
         $(".member-name").text(data.email);
@@ -13,7 +14,7 @@ $(document).ready(function() {
 
     // A function to get Authors and then render our list of Categories
     function getCategory() {
-        $.get("/api/user_data", renderCategoryList);
+        $.get("/api/category", renderCategoryList);
     }
 
    
@@ -40,7 +41,7 @@ $(document).ready(function() {
       }
 
     req.query({
-        "keywords": keyword,
+        "keywords": "ipnone",
         "marketplace": "US"
     });
     
@@ -49,17 +50,16 @@ $(document).ready(function() {
         "x-rapidapi-key": "3f02ee3a6cmshd59f244cdd17b11p1de9e5jsn91062f0f2cd3"
     });
     
-    
     req.end(function (res) {
         if (res.error) throw new Error(res.error);
         // console.log(res.body);
         
         for(i=0; i<res.body.length; i++){
             console.log(res.body[i].title);
-            console.log(res.body[i].price);
+            console.log(res.body);
         }
     
     });
 
 
-});
+//});
