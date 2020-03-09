@@ -4,10 +4,15 @@ module.exports = function(sequelize, DataTypes)
     {
       category_name:
       {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING, 
         allowNull: false,
         unique: true
       }
-    });
+      
+    },
+    {
+      timestamps: false,
+    }); 
+    
     return Category;
 };
