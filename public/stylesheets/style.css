@@ -186,3 +186,13 @@ nav.navbar-webmaster ul.dropdown-menu > li > a { color: #444; }
 nav.navbar-webmaster ul.dropdown-menu > li > a:hover { background: #f14444; color: #fff; }
 nav.navbar-webmaster span.badge { background: #f14444; font-weight: normal; font-size: 11px; margin: 0 4px; }
 nav.navbar-webmaster span.badge.new { background: rgba(255, 0, 0, 0.8); color: #fff; }
+
+.footer {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: rgb(39, 37, 37);
+	color: white;
+	text-align: center;
+ }
