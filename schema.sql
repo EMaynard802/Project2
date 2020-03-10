@@ -1,16 +1,4 @@
-CREATE DATABASE ecommerce_db;
 
-USE ecommerce_db;
-
-CREATE TABLE store(
-id INT AUTO_INCREMENT NOT NULL,
-category VARCHAR (100) NOT NULL,
-name VARCHAR (200) NOT NULL,
-price INTEGER (5) NOT NULL,
-quantity INTEGER (2) NOT NULL,
-image VARCHAR (200), 
-PRIMARY KEY (id)
-);
-
-
-SELECT * FROM store;
+DROP DATABASE IF EXISTS ecommerce_db;
+-- Creates the "todolist" database --
+CREATE DATABASE ecommerce_db
