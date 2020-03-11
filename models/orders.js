@@ -14,5 +14,5 @@ module.exports = function(sequelize, DataTypes)
       //A.hasMany(B)
       //User.hasMany(Order)
     });
-    return Category;
+    return Order;
 };

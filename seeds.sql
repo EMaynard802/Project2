@@ -1,4 +1,4 @@
-INSERT INTO category (category_name) VALUES ('electronics');
-INSERT INTO category (category_name) VALUES ('toys');
-INSERT INTO category (category_name) VALUES ('sports');
-INSERT INTO category (category_name) VALUES ('game');
+INSERT INTO Categories (category_name) VALUES ('Electronics');
+INSERT INTO Categories (category_name) VALUES ('Toys');
+INSERT INTO Categories (category_name) VALUES ('Sports');
+INSERT INTO Categories (category_name) VALUES ('Game');
