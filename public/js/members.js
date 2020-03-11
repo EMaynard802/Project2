@@ -5,6 +5,7 @@ $(document).ready(function() {
     // var unirest = require("unirest");
     // var req = unirest("GET", "https://amazon-price1.p.rapidapi.com/search");
     var categorySelect = $("#categoryList");
+    var listOption;
     // var userInput = categorySelect.val();
     // var currency = $("#currency").val();
 
@@ -32,6 +33,7 @@ $(document).ready(function() {
             console.log(data[i]);
           rowsToAdd.push(createCategoryList(data[i]));
         }
+        
 
         console.log(rowsToAdd);
         categorySelect.empty();
@@ -44,9 +46,12 @@ $(document).ready(function() {
     function createCategoryList(category) {
         
         console.log("inside create category");
-        var listOption = $("<li>");
-        listOption.attr("value", category.id);
-        listOption.text(category.category_name);
+        listOption = $("<li>");
+        var linkElement = $("<a>");
+        listOption.append(linkElement);
+        linkElement.attr("value", category.id);
+        linkElement.attr("href", "#");
+        linkElement.text(category.category_name);
         return listOption;
       }
 
