@@ -1,3 +1,12 @@
-DROP DATABASE IF EXISTS ecommerce_db;
+
+DROP DATABASE IF EXISTS passport_demo;
 -- Creates the "todolist" database --
-CREATE DATABASE ecommerce_db;
+CREATE DATABASE passport_demo;
+
+USE passport_demo;
+SELECT * FROM Categories;
+
+
+ 
+ 
+
