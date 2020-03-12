@@ -89,7 +89,6 @@ async function getAmazonData(keyword){
 }  
 
 
-
   
 
 
