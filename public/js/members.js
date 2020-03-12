@@ -1,29 +1,34 @@
 
 var categorySelect = $("#categoryList");
 var listOption;
+var itemCardTemplate = $("#item-container").clone();
+
+var itemArray = [];
+
+
 
 
 // var userInput = categorySelect.val();
 // var currency = $("#currency").val();
-
-getCategory();
-
-categorySelect.on("click", getCategoryValue);
-
+$(document).ready(function () {
+  $("#item-container").remove();
+  getCategory();
 
 
-$.get("/api/user_data").then(function(data) {
+  categorySelect.on("click", getCategoryValue);
+
+  $.get("/api/user_data").then(function(data) {
     $(".member-name").text(data.email);
-});
+  });
 
-// A function to get Authors and then render our list of Categories
-function getCategory() {
+  // A function to get Authors and then render our list of Categories
+  function getCategory() {
     console.log("inside user-data route");
     $.get("/api/category", renderCategoryList);
-}
+  }
 
-// Function to either render a list of categories
-function renderCategoryList(data) {
+  // Function to either render a list of categories
+  function renderCategoryList(data) {
     console.log("inside rendercategory");
     //console.log(data);
     var rowsToAdd = [];
@@ -38,10 +43,10 @@ function renderCategoryList(data) {
     //console.log(categorySelect);
     categorySelect.append(rowsToAdd);
     // categorySelect.val(authorId);
-}
+  }
 
-// Creates the category options in the dropdown
-function createCategoryList(category) {
+  // Creates the category options in the dropdown
+  function createCategoryList(category) {
     
     console.log("inside create category");
     listOption = $("<li>");
@@ -53,6 +58,8 @@ function createCategoryList(category) {
     return listOption;
   }
 
+
+});
   //function to get selected category
 
   async function getCategoryValue(event){
@@ -85,11 +92,36 @@ async function getAmazonData(keyword){
 
   await $.ajax(header).done(function (response) {
     console.log(response);
+
   });
 }  
 
+// function generateNewCard(data) {
+    
+//   let newItemCard = itemCardTemplate.clone();
+  
+//   //Item Details
+//   newItemCard.find(".desc").html(newGeneratedQuestion.question).text();
+//   newItemCard.find(".title").html(newGeneratedQuestion.question).text();
+//   newItemCard.find(".img-wrap").html(newGeneratedQuestion.question).text();
+//   newItemCard.find(".price").html(newGeneratedQuestion.question).text();
 
+//   return newItemCard;
+// }
 
+// function generateItem(response) {
+//   const { results } = response;
+
+//   results.forEach((item) => {
+  
+//       let newGeneratedItem = new Item(item.desc, item.title, item.image, item.price);
+//       itemArray.push(newGeneratedQuestion);
+
+//       //Make the card element from the newQuestion
+//       let addItemCard= generateNewCard(newGeneratedItem);
+//       $("#questionsContainer").prepend(addItemCard);
+//   });
+// }
   
 
 
@@ -108,34 +140,5 @@ async function getAmazonData(keyword){
 
 
 
-
-
-//   var unirest = require("unirest");
-//   var req = unirest("GET", "https://amazon-price1.p.rapidapi.com/search");
-  
-//   // This file just does a GET request to figure out which user is logged in
-//   // and updates the HTML on the page
-//   $.get("/api/user_data").then(function(data) {
-//     $(".member-name").text(data.email);
-//   });
-
-//   req.query({
-//     "keywords": "ipnone",
-//     "marketplace": "US"
-// });
-
-// req.headers({
-//     "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-//     "x-rapidapi-key": "3f02ee3a6cmshd59f244cdd17b11p1de9e5jsn91062f0f2cd3"
-// });
-
-// req.end(function (res) {
-//     if (res.error) throw new Error(res.error);
-//     // console.log(res.body);
-    
-//     for(i=0; i<res.body.length; i++){
-//         console.log(res.body[i].title);
-//         console.log(res.body);
-//     }
 
 
