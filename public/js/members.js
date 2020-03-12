@@ -79,7 +79,7 @@ async function getAmazonData(keyword){
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-      "x-rapidapi-key": "3f02ee3a6cmshd59f244cdd17b11p1de9e5jsn91062f0f2cd3"
+      "x-rapidapi-key": process_env_apiKey
     }
   }
 
@@ -88,7 +88,7 @@ async function getAmazonData(keyword){
   });
 }  
 
-//getAmazonData();
+
 
   
 
