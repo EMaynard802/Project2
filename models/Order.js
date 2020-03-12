@@ -11,6 +11,16 @@ module.exports = function(sequelize, DataTypes)
         allowNull: false,
         unique: false
 
+      },
+      user_id:
+      {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      item_name:
+      {
+        type: DataTypes.STRING,
+        allowNull: false
       }
     });
     Order.associate = function(models) {
