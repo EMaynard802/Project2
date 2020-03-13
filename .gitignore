@@ -1,1 +1,6 @@
 node_modules
+<<<<<<< HEAD
+passWord.js
+=======
+.env
+>>>>>>> f6001811337b64408afc5c8b25f3606d5965f43c

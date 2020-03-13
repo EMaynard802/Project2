@@ -1,7 +1,7 @@
 //API request goes here?
 module.exports = function(sequelize, DataTypes) 
 {
-    var Items = sequelize.define("Items", 
+    var Item = sequelize.define("Item", 
     {
       item_name: 
       {
@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes)
       {
         type: DataTypes.STRING,
         allowNull: true,
-        unique: false
+        unique: true
       },
       item_price:
       {
@@ -35,10 +35,21 @@ module.exports = function(sequelize, DataTypes)
       },
       item_quantity:
       {
-        type: DataTypes.FLOAT,
+        type: DataTypes.INTEGER,
         allowNull: false,
         unique: false
       }
     });
-    return Items;
+
+    Item.associate = function(models) {
+        // We're saying that an Item should belong to a Categorey
+        // An Item can't be created without an Category due to the foreign key constraint
+        Item.belongsTo(models.Category, {
+          foreignKey: {
+            allowNull: false
+          }
+        });
+      };
+
+    return Item;
 };
