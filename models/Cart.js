@@ -14,6 +14,12 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         allowNull: false,
         min: 1
+      },
+      item_price: 
+      {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        min: 1
       }
       
     });
@@ -23,7 +29,8 @@ module.exports = function(sequelize, DataTypes) {
       Cart.belongsTo(models.User, {
           foreignKey: {
           //name: "UserID",
-          allowNull: false
+          defaultValue: 1
+          //allowNull: false
         }
       });
     };
