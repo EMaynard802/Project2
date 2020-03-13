@@ -1,16 +1,16 @@
 
 var categorySelect = $("#categoryList");
 var listOption;
-var itemCardTemplate = $("#item-container").clone();
+var itemCard = $("#item-container").clone();
+var addToCart = $("#add-button");
 
 var itemArray = [];
 
 
 
 
-// var userInput = categorySelect.val();
-// var currency = $("#currency").val();
-$(document).ready(function () {
+var userInput = categorySelect.val();
+var currency = $("#currency").val()
   $("#item-container").remove();
   getCategory();
 
@@ -21,28 +21,23 @@ $(document).ready(function () {
     $(".member-name").text(data.email);
   });
 
-  // A function to get Authors and then render our list of Categories
+  // A function to get categories and then render our list of Categories
   function getCategory() {
     console.log("inside user-data route");
     $.get("/api/category", renderCategoryList);
   }
 
-  // Function to either render a list of categories
+  // Function to render a list of categories
   function renderCategoryList(data) {
     console.log("inside rendercategory");
-    //console.log(data);
     var rowsToAdd = [];
     for (var i = 0; i < data.length; i++) {
-        //console.log(data[i]);
       rowsToAdd.push(createCategoryList(data[i]));
     }
     
-
-    //console.log(rowsToAdd);
     categorySelect.empty();
-    //console.log(categorySelect);
     categorySelect.append(rowsToAdd);
-    // categorySelect.val(authorId);
+  
   }
 
   // Creates the category options in the dropdown
@@ -58,12 +53,11 @@ $(document).ready(function () {
     return listOption;
   }
 
-
-});
   //function to get selected category
 
   async function getCategoryValue(event){
     event.stopPropagation();
+    // $("#item-container").remove();
     console.log("inside getcategoryname function");
     var categoryName = $(event.target).text();
     console.log(categoryName);
@@ -74,55 +68,69 @@ $(document).ready(function () {
   
 async function getAmazonData(keyword){
 
-  console.log("inside getAmazonData function");
-
-  //keyword = "Before Call test";
   console.log("keyword:" + keyword);
 
-  var header = {
+  const header = {
     "async": true,
     "crossDomain": true,
     "url": `https://amazon-price1.p.rapidapi.com/search?keywords= ${keyword}&marketplace=US`,
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-      "x-rapidapi-key": process_env_apiKey
+      "x-rapidapi-key": ""
     }
   }
 
   await $.ajax(header).done(function (response) {
-    console.log(response);
+    generateItem(response);
 
   });
 }  
 
-// function generateNewCard(data) {
+// generates new item card
+function generateNewCard(data) {
     
-//   let newItemCard = itemCardTemplate.clone();
+  let newItemCard = itemCard.clone();
   
-//   //Item Details
-//   newItemCard.find(".desc").html(newGeneratedQuestion.question).text();
-//   newItemCard.find(".title").html(newGeneratedQuestion.question).text();
-//   newItemCard.find(".img-wrap").html(newGeneratedQuestion.question).text();
-//   newItemCard.find(".price").html(newGeneratedQuestion.question).text();
+  //Item Details
+  newItemCard.find(".title").html(data.title).text();
+  newItemCard.find("#image").attr("src", data.image);
+  newItemCard.find(".price").html(data.price).text();
+  newItemCard.find(".price-old").html(data.listPrice).text();
 
-//   return newItemCard;
-// }
+  return newItemCard;
+}
 
-// function generateItem(response) {
-//   const { results } = response;
-
-//   results.forEach((item) => {
+//Renders generated item cards
+function generateItem(response) {
+  const results  = response;
+  results.forEach((item) => {
   
-//       let newGeneratedItem = new Item(item.desc, item.title, item.image, item.price);
-//       itemArray.push(newGeneratedQuestion);
+      let newGeneratedItem = new Item(item.imageUrl, item.title,item.price, item.listPrice);
+      itemArray.push(newGeneratedItem);
+      //Make the card element from the NewGeneratdItem
+      let addItemCard= generateNewCard(newGeneratedItem);
+      $(".row").prepend(addItemCard);
 
-//       //Make the card element from the newQuestion
-//       let addItemCard= generateNewCard(newGeneratedItem);
-//       $("#questionsContainer").prepend(addItemCard);
-//   });
-// }
-  
+  });
+}
+
+addToCart.on("click", itemCart);
+
+// async function itemCart(event) {
+//   // prevents the click listener for the list from being called when the button inside of it is clicked
+//   event.stopPropagation();
+//   console.log("inside handle delete note function");
+//   cartArray = []
+//    var item =  await $(this)
+//     .parent(".card-product")
+//     .data();
+//     console.log("Item Cart:");
+//     console.log(item);
+// };
+
+
+
 
 
 

@@ -323,14 +323,20 @@ ul.dropdown-cart li .item-right button{
     text-align: center;
 }
 .card-product .img-wrap img {
-    height: 60%;
+    height: 100%;
     max-width: 100%;
     object-fit: cover;
 }
 .card-product .info-wrap {
     overflow: hidden;
+    text-overflow: ellipsis;
     padding: 15px;
     border-top: 1px solid #eee;
+}
+
+.card-product .info-wrap .title{
+  /* overflow: hidden; */
+  text-overflow: ellipsis !important;
 }
 .card-product .bottom-wrap {
     padding: 15px;
@@ -345,4 +351,10 @@ ul.dropdown-cart li .item-right button{
 
 .card-product .price-old {
     color: #999;
+}
+
+.card-product {
+  background-color:white;
+  margin-bottom: 10px !important;
+  margin-right: 5px;
 }
