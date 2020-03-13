@@ -43,11 +43,12 @@ module.exports = function(app) {
   });
 
   app.post("/api/cart", function(req, res) {
-    console.log("Entering cart creation: ")// + req.body.item_name);
+    console.log("Entering cart route")// + req.body.item_name);
     db.Cart.create({
       item_name: req.body.item_name,
       item_quantity: req.body.item_quantity,
-      item_price: req.body.item_price
+      item_price: req.body.item_price,
+      UserId: req.body.UserId
       //user_id: db.User.user_id 
     }).then(function(dbCart)
      {
@@ -70,7 +71,7 @@ module.exports = function(app) {
 //   {
 //     cartList.add(data);
 //     console.log("Data from query: " + data);
-//     return res.json(data) //redirect('/show-cart'); // chuyển hướng về trang bạn muốn
+//     return res.json(data) //redirect('/show-cart'); // 
 //   });
 //   //return res.json(cartList)
 // });
@@ -105,19 +106,45 @@ module.exports = function(app) {
       res.json(dbCartItem);
     });
   });
-app.get("/api/addToCart", function (req, res){
+app.get("/api/addToCart/:id", function (req, res){
   var query = {};
     if (req.query.user_id) {
       query.UserId = req.query.user_id;
     }
-  db.Cart.count({
+  db.Cart.findAndCountAll({
     where: {
-      UserId: 1
+      UserId: req.params.id
     }
+  }).then(function(items)
+    {
+    console.log(items);
+    //  return  function (lineItem) 
+    //   {
+      var itemList = [];
+        for (var i = 0; i< items.rows.length; i++)
+        {
+          var lineItem = items.rows[i].item_price * items.rows[i].item_quantity;
+          var cartList = {
+            lineNumber: i + 1,
+            itemDesc: items.rows[i].item_name,
+            unitPrice: items.rows[i].item_price,
+            quatity: items.rows[i].item_quantity,
+            subTotal: lineItem
+          }
+          itemList.push(cartList)
+          console.log(itemList);
 
-  }).then(function(items){
+        }
+        
+        //return lineItemPrice;
+        res.json(itemList);
+      //};
+    });
+});
 
-    res.json(items);
+app.get("/api/users", function(req, res){
+  db.User.findAndCountAll({include: [db.Cart]}).then(function(users){
+    res.json(users);
   });
 });
 
