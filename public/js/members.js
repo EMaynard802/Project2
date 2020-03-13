@@ -1,47 +1,47 @@
 
 var categorySelect = $("#categoryList");
 var listOption;
+var itemCard = $("#item-container").clone();
+var addToCart = $("#add-button");
 
-
-// var userInput = categorySelect.val();
-// var currency = $("#currency").val();
-
-getCategory();
-
-categorySelect.on("click", getCategoryValue);
+var itemArray = [];
 
 
 
-$.get("/api/user_data").then(function(data) {
+
+var userInput = categorySelect.val();
+var currency = $("#currency").val()
+  $("#item-container").remove();
+  getCategory();
+
+
+  categorySelect.on("click", getCategoryValue);
+
+  $.get("/api/user_data").then(function(data) {
     $(".member-name").text(data.email);
-});
+  });
 
-// A function to get Authors and then render our list of Categories
-function getCategory() {
+  // A function to get categories and then render our list of Categories
+  function getCategory() {
     console.log("inside user-data route");
     $.get("/api/category", renderCategoryList);
-}
+  }
 
-// Function to either render a list of categories
-function renderCategoryList(data) {
+  // Function to render a list of categories
+  function renderCategoryList(data) {
     console.log("inside rendercategory");
-    //console.log(data);
     var rowsToAdd = [];
     for (var i = 0; i < data.length; i++) {
-        //console.log(data[i]);
       rowsToAdd.push(createCategoryList(data[i]));
     }
     
-
-    //console.log(rowsToAdd);
     categorySelect.empty();
-    //console.log(categorySelect);
     categorySelect.append(rowsToAdd);
-    // categorySelect.val(authorId);
-}
+  
+  }
 
-// Creates the category options in the dropdown
-function createCategoryList(category) {
+  // Creates the category options in the dropdown
+  function createCategoryList(category) {
     
     console.log("inside create category");
     listOption = $("<li>");
@@ -57,6 +57,7 @@ function createCategoryList(category) {
 
   async function getCategoryValue(event){
     event.stopPropagation();
+    // $("#item-container").remove();
     console.log("inside getcategoryname function");
     var categoryName = $(event.target).text();
     console.log(categoryName);
@@ -67,29 +68,69 @@ function createCategoryList(category) {
   
 async function getAmazonData(keyword){
 
-  console.log("inside getAmazonData function");
-
-  //keyword = "Before Call test";
   console.log("keyword:" + keyword);
 
-  var header = {
+  const header = {
     "async": true,
     "crossDomain": true,
     "url": `https://amazon-price1.p.rapidapi.com/search?keywords= ${keyword}&marketplace=US`,
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-      "x-rapidapi-key": process_env_apiKey
+      "x-rapidapi-key": ""
     }
   }
 
   await $.ajax(header).done(function (response) {
-    console.log(response);
+    generateItem(response);
+
   });
 }  
 
-
+// generates new item card
+function generateNewCard(data) {
+    
+  let newItemCard = itemCard.clone();
   
+  //Item Details
+  newItemCard.find(".title").html(data.title).text();
+  newItemCard.find("#image").attr("src", data.image);
+  newItemCard.find(".price").html(data.price).text();
+  newItemCard.find(".price-old").html(data.listPrice).text();
+
+  return newItemCard;
+}
+
+//Renders generated item cards
+function generateItem(response) {
+  const results  = response;
+  results.forEach((item) => {
+  
+      let newGeneratedItem = new Item(item.imageUrl, item.title,item.price, item.listPrice);
+      itemArray.push(newGeneratedItem);
+      //Make the card element from the NewGeneratdItem
+      let addItemCard= generateNewCard(newGeneratedItem);
+      $(".row").prepend(addItemCard);
+
+  });
+}
+
+addToCart.on("click", itemCart);
+
+// async function itemCart(event) {
+//   // prevents the click listener for the list from being called when the button inside of it is clicked
+//   event.stopPropagation();
+//   console.log("inside handle delete note function");
+//   cartArray = []
+//    var item =  await $(this)
+//     .parent(".card-product")
+//     .data();
+//     console.log("Item Cart:");
+//     console.log(item);
+// };
+
+
+
 
 
 
@@ -107,34 +148,5 @@ async function getAmazonData(keyword){
 
 
 
-
-
-//   var unirest = require("unirest");
-//   var req = unirest("GET", "https://amazon-price1.p.rapidapi.com/search");
-  
-//   // This file just does a GET request to figure out which user is logged in
-//   // and updates the HTML on the page
-//   $.get("/api/user_data").then(function(data) {
-//     $(".member-name").text(data.email);
-//   });
-
-//   req.query({
-//     "keywords": "ipnone",
-//     "marketplace": "US"
-// });
-
-// req.headers({
-//     "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-//     "x-rapidapi-key": "3f02ee3a6cmshd59f244cdd17b11p1de9e5jsn91062f0f2cd3"
-// });
-
-// req.end(function (res) {
-//     if (res.error) throw new Error(res.error);
-//     // console.log(res.body);
-    
-//     for(i=0; i<res.body.length; i++){
-//         console.log(res.body[i].title);
-//         console.log(res.body);
-//     }
 
 
