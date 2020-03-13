@@ -46,7 +46,8 @@ module.exports = function(app) {
     console.log("Entering cart creation: ")// + req.body.item_name);
     db.Cart.create({
       item_name: req.body.item_name,
-      item_quantity: req.body.item_quantity
+      item_quantity: req.body.item_quantity,
+      item_price: req.body.item_price
       //user_id: db.User.user_id 
     }).then(function(dbCart)
      {
@@ -91,9 +92,11 @@ module.exports = function(app) {
 
     // GET route for getting all of the items created.
   app.get("/api/items", function (req, res){
+    console.log("User id: " + req.query.user_id)
       var query = {};
     if (req.query.user_id) {
       query.UserId = req.query.user_id;
+      console.log("User id: " + req.query.user_id)
     }
     db.Cart.findAll({
       where: query,
@@ -102,5 +105,23 @@ module.exports = function(app) {
       res.json(dbCartItem);
     });
   });
+app.get("/api/addToCart", function (req, res){
+  var query = {};
+    if (req.query.user_id) {
+      query.UserId = req.query.user_id;
+    }
+  db.Cart.count({
+    where: {
+      UserId: 1
+    }
+
+  }).then(function(items){
+
+    res.json(items);
+  });
+});
+
+
+
  // 
 };
