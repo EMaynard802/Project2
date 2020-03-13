@@ -1,6 +1,7 @@
 // Requiring our models and passport as we've configured it
 var db = require("../models");
 var passport = require("../config/passport");
+var Shop = require('nodejs-cart-lna');
 
 module.exports = function(app) {
   // Using the passport.authenticate middleware with our local strategy.
@@ -32,16 +33,47 @@ module.exports = function(app) {
     req.logout();
     res.redirect("/");
   });
-
-  app.get("/api/category", function(req, res){
-
-    
-    db.Category.findAll({}).then(function(dbCategory){
-      res.json(dbCategory);
-    });
-    //
+//Setting up category route, runs on page load
+  app.get("/api/category", function(req, res)
+  {   
+      db.Category.findAll({}).then(function(dbCategory)
+      {
+        res.json(dbCategory);
+      });
   });
 
+  app.post("/api/cart", function(req, res) {
+    console.log("Entering cart creation: ")// + req.body.item_name);
+    db.Cart.create({
+      item_name: req.body.item_name,
+      item_quantity: req.body.item_quantity,
+      item_price: req.body.item_price
+      //user_id: db.User.user_id 
+    }).then(function(dbCart)
+     {
+      db.Cart.findOne(
+         {
+           where:
+           {
+              item_quantity: req.body.item_quantity
+           }
+         })
+        res.json(req.body.item_quantity);
+     });
+  });
+// route add product to carts ssession
+// app.get('/api/category/:id',function(req,res)
+// {
+//   var cartList = new Shop(req);
+//   console.log("this is a cart list at declaration: " + cartList)
+//   db.Category.findOne({where:{id:req.params.id}},function(err,data)
+//   {
+//     cartList.add(data);
+//     console.log("Data from query: " + data);
+//     return res.json(data) //redirect('/show-cart'); // chuyển hướng về trang bạn muốn
+//   });
+//   //return res.json(cartList)
+// });
   // Route for getting some data about our user to be used client side
   app.get("/api/user_data", function(req, res) {
     console.log("inside app.get")
@@ -58,23 +90,38 @@ module.exports = function(app) {
     }
   });
 
+    // GET route for getting all of the items created.
+  app.get("/api/items", function (req, res){
+    console.log("User id: " + req.query.user_id)
+      var query = {};
+    if (req.query.user_id) {
+      query.UserId = req.query.user_id;
+      console.log("User id: " + req.query.user_id)
+    }
+    db.Cart.findAll({
+      where: query,
+      include: [db.User]
+    }).then(function(dbCartItem) {
+      res.json(dbCartItem);
+    });
+  });
+app.get("/api/addToCart", function (req, res){
+  var query = {};
+    if (req.query.user_id) {
+      query.UserId = req.query.user_id;
+    }
+  db.Cart.count({
+    where: {
+      UserId: 1
+    }
 
-  // app.post("/api/order", function(req, res){
-  //   //var categoryList = ["eletronics", "sports", "toys"];
-  //   for (var i = 0; i <categoryList.length; i++)
-  //   {
-  //     // var newlist = 
-  //     db.Category.create({
-  //     category_name: categoryList[i]
-  //   }).then(function(dbCategory) {
-  //     // We have access to the new todo as an argument inside of the callback function
-  //     // dbCategory.push(newlist)
-  //     res.json(dbCategory);
-  //   });
-  //   }
-  // });
+  }).then(function(items){
+
+    res.json(items);
+  });
+});
 
 
-  // Route for getting some data about our user to be used client side
-  
+
+ // 
 };
