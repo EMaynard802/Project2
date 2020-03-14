@@ -45,6 +45,7 @@ module.exports = function(app) {
 
   app.post("/api/cart", function(req, res) {
     console.log("Entering cart route")// + req.body.item_name);
+    console.log(req.body);
     db.Cart.create({
       item_name: req.body.item_name,
       item_quantity: req.body.item_quantity,
