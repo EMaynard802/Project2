@@ -6,8 +6,9 @@ var cartArray = [];
 // var addToCart = $(".bottom-wrap");
 
 var itemArray = [];
+var userID;
 
-
+$(document).ready(function() {
 
 
 var userInput = categorySelect.val();
@@ -20,6 +21,10 @@ getCategory();
 
   $.get("/api/user_data").then(function(data) {
     $(".member-name").text(data.email);
+    
+    userID = data.id;
+    // console.log("Data ID: ");
+    // console.log(userID);
   });
 
   // A function to get categories and then render our list of Categories
@@ -45,6 +50,8 @@ getCategory();
   function createCategoryList(category) {
     
     console.log("inside create category");
+    console.log("User ID:")
+    console.log(userID);
     listOption = $("<li>");
     var linkElement = $("<a>");
     listOption.append(linkElement);
@@ -53,6 +60,8 @@ getCategory();
     linkElement.text(category.category_name);
     return listOption;
   }
+
+});
 
   //function to get selected category
 
@@ -78,7 +87,7 @@ async function getAmazonData(keyword){
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-      "x-rapidapi-key": "2eb144d7f0msh71deafc40feda88p155f8bjsn974e3093c435"
+      "x-rapidapi-key": ""
     }
   }
 
@@ -115,35 +124,31 @@ function generateItem(response) {
 
   });
 }
-$(document).on("click", ".bottom-wrap", function itemCart(event) {
+$(document).on("click", ".bottom-wrap", itemCart);
 
+function itemCart(event) {
   event.preventDefault();
-  console.log("inside handle delete note function");
-  // prevents the click listener for the list from being called when the button inside of it is clicked
- 
+
   var itemTitle =  ($(this)
   .prev()
   .text()).trim();
-  var itemPrice =  ($(this).find(".price")
+  var itemPrice =  ($(this)
+  .find(".price")
   .text()).trim();
-  
-  // console.log(itemTitle);
-  // console.log(itemPrice);
+  itemPrice = itemPrice.slice(1);
+  var quantity = 1;
+
+  addToCart(itemTitle, itemPrice, quantity);
   
   var index = cartArray.findIndex(x => x.Title== itemTitle)
-// here you can check specific property for an object whether it exist in your array or not
-
-if (index === -1){
-  cartArray.push({'Title': itemTitle, 'Price': itemPrice, 'Quantity': 1});
-}
-else {
-  console.log("object already exists")
-  cartArray[index].Quantity += 1;
-}
-  //search if itemTitle is already in CardArray
-  // if not found then
-    
-  //if found then increment the quanty of that itemTitle by 1
+  // here you can check specific property for an object whether it exist in your array or not
+  if (index === -1){
+    cartArray.push({'Title': itemTitle, 'Price': itemPrice, 'Quantity': 1});
+  }
+  else {
+    console.log("object already exists")
+    cartArray[index].Quantity += 1;
+  }
   var totalItems = 0;
   cartArray.forEach((item) => {
     console.log(item.Title);
@@ -153,8 +158,22 @@ else {
     $(".numOfItem").text(totalItems);
 
   });
+}
 
-});
+function addToCart(item_name, item_price, item_quantity) {
+  $.post("/api/cart", {
+    item_name: item_name,
+    item_quantity: item_quantity,
+    item_price: item_price,
+    UserId: userID
+  })
+    .then(function() {
+      console.log("Item added to cart!");
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+}
 
 
 
