@@ -2,6 +2,7 @@
 var db = require("../models");
 var passport = require("../config/passport");
 var Shop = require('nodejs-cart-lna');
+var path = require('path');
 
 module.exports = function(app) {
   // Using the passport.authenticate middleware with our local strategy.
@@ -62,19 +63,6 @@ module.exports = function(app) {
         res.json(req.body.item_quantity);
      });
   });
-// route add product to carts ssession
-// app.get('/api/category/:id',function(req,res)
-// {
-//   var cartList = new Shop(req);
-//   console.log("this is a cart list at declaration: " + cartList)
-//   db.Category.findOne({where:{id:req.params.id}},function(err,data)
-//   {
-//     cartList.add(data);
-//     console.log("Data from query: " + data);
-//     return res.json(data) //redirect('/show-cart'); // 
-//   });
-//   //return res.json(cartList)
-// });
   // Route for getting some data about our user to be used client side
   app.get("/api/user_data", function(req, res) {
     console.log("inside app.get")
@@ -118,27 +106,15 @@ app.get("/api/addToCart/:id", function (req, res){
   }).then(function(items)
     {
     console.log(items);
-    //  return  function (lineItem) 
-    //   {
-      var itemList = [];
+        var numOfItems = 0; 
         for (var i = 0; i< items.rows.length; i++)
         {
-          var lineItem = items.rows[i].item_price * items.rows[i].item_quantity;
-          var cartList = {
-            lineNumber: i + 1,
-            itemDesc: items.rows[i].item_name,
-            unitPrice: items.rows[i].item_price,
-            quatity: items.rows[i].item_quantity,
-            subTotal: lineItem
-          }
-          itemList.push(cartList)
-          console.log(itemList);
-
+          //var lineItem = items.rows[i].item_price * items.rows[i].item_quantity;
+          var itemCount = items.rows[i].item_quantity + numOfItems;
+          numOfItems = itemCount;
+          console.log(numOfItems)
         }
-        
-        //return lineItemPrice;
-        res.json(itemList);
-      //};
+        res.json(numOfItems);
     });
 });
 
@@ -148,7 +124,52 @@ app.get("/api/users", function(req, res){
   });
 });
 
+app.get("/api/viewCart/:id", function (req, res){
+  var itemList = [];
+  var query = {};
+    if (req.query.user_id) {
+      query.UserId = req.query.user_id;
+    }
+  db.Cart.findAndCountAll({
+    where: {
+      UserId: req.params.id
+    }
+  }).then(function(items)
+    {
+    console.log(items);
+    //  return  function (lineItem) 
+    //   {
+         
+         //var numOfItems = 0; 
+        for (var i = 0; i< items.rows.length; i++)
+        {
+          var lineItem = items.rows[i].item_price * items.rows[i].item_quantity;
+          console.log(lineItem);
+          db.LineItem.create({
+            lineNumber: i + 1,
+            itemDesc: items.rows[i].item_name,
+            unitPrice: items.rows[i].item_price,
+            quantity: items.rows[i].item_quantity,
+            subTotal: lineItem
+          }).then(function(newItems){
+            console.log("New list items: " + items)
+            itemList.push(newItems);
+            //res.json(items);
+            res.sendFile(path.join(__dirname, "../public/members.html"));
 
+          })
+          //res.json(itemList);
+        }
+        
+        //return lineItemPrice;
+        //console.log(items.rows[0].item_quantity)
+        //res.json(itemList);
+        //res.parseInt(items.count + items.rows.item_quantity);
+      //};
+      return;
+    });
+    //res.json(itemList);
+});
 
  // 
 };
