@@ -2,7 +2,8 @@
 var categorySelect = $("#categoryList");
 var listOption;
 var itemCard = $("#item-container").clone();
-var addToCart = $("#add-button");
+var cartArray = [];
+// var addToCart = $(".bottom-wrap");
 
 var itemArray = [];
 
@@ -11,8 +12,8 @@ var itemArray = [];
 
 var userInput = categorySelect.val();
 var currency = $("#currency").val()
-  $("#item-container").remove();
-  getCategory();
+$("#item-container").remove();
+getCategory();
 
 
   categorySelect.on("click", getCategoryValue);
@@ -114,20 +115,48 @@ function generateItem(response) {
 
   });
 }
+$(document).on("click", ".bottom-wrap", function itemCart(event) {
 
-addToCart.on("click", itemCart);
+  event.preventDefault();
+  console.log("inside handle delete note function");
+  // prevents the click listener for the list from being called when the button inside of it is clicked
+ 
+  var itemTitle =  ($(this)
+  .prev()
+  .text()).trim();
+  var itemPrice =  ($(this).find(".price")
+  .text()).trim();
+  
+  // console.log(itemTitle);
+  // console.log(itemPrice);
+  
+  var index = cartArray.findIndex(x => x.Title== itemTitle)
+// here you can check specific property for an object whether it exist in your array or not
 
-// async function itemCart(event) {
-//   // prevents the click listener for the list from being called when the button inside of it is clicked
-//   event.stopPropagation();
-//   console.log("inside handle delete note function");
-//   cartArray = []
-//    var item =  await $(this)
-//     .parent(".card-product")
-//     .data();
-//     console.log("Item Cart:");
-//     console.log(item);
-// };
+if (index === -1){
+  cartArray.push({'Title': itemTitle, 'Price': itemPrice, 'Quantity': 1});
+}
+else {
+  console.log("object already exists")
+  cartArray[index].Quantity += 1;
+}
+  //search if itemTitle is already in CardArray
+  // if not found then
+    
+  //if found then increment the quanty of that itemTitle by 1
+  var totalItems = 0;
+  cartArray.forEach((item) => {
+    console.log(item.Title);
+    console.log(item.Price);
+    console.log(item.Quantity);
+    totalItems += item.Quantity;
+    $(".numOfItem").text(totalItems);
+
+  });
+
+});
+
+
 
 
 
