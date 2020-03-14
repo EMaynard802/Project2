@@ -28,9 +28,9 @@ module.exports = function(sequelize, DataTypes) {
       // An Order can't be created without an User due to the foreign key constraint
       Cart.belongsTo(models.User, {
           foreignKey: {
-          //name: "UserID",
-          defaultValue: 1
-          //allowNull: false
+          //name: "UserID"
+          //defaultValue: 1
+          allowNull: false
         }
       });
     };
