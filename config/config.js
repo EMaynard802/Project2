@@ -1,8 +1,10 @@
-{
+module.exports = {
+
   "development": {
-    "username": "",
-    "database": "passport_demo",
-    "host": "127.0.0.1",
+    "username": process_env_USER,
+    "password": process_env_PASS,
+    "database": process_env_DB,
+    "host": process_env_HOST,
     "dialect": "mysql"
   },
   "test": {
@@ -13,10 +15,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+   "use_env_variable": "JAWSDB_URL",
     "dialect": "mysql"
   }
+
 }
+
+
