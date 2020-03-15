@@ -21,10 +21,6 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false,
         min: 1
       }
-      
-    },
-    {
-      timestamps: false,
     });
     Cart.associate = function(models) {
       // We're saying that an Order should belong to a User

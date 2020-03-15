@@ -125,7 +125,10 @@ app.get("/api/users", function(req, res){
   });
 });
 
+
 app.get("/api/viewCart/:id", function (req, res){
+  console.log("Entering get viewcart ");
+  console.log(req.query.user_id);
   var itemList = [];
   var query = {};
     if (req.query.user_id) {
