@@ -10,15 +10,12 @@ var userID;
 
 $(document).ready(function() {
 
+  var userInput = categorySelect.val();
+  var currency = $("#currency").val()
+  $("#item-container").remove();
+  getCategory();
 
-var userInput = categorySelect.val();
-var currency = $("#currency").val()
-$("#item-container").remove();
-getCategory();
-
-
-  categorySelect.on("click", getCategoryValue);
-
+  
   $.get("/api/user_data").then(function(data) {
     $(".member-name").text(data.email);
     
@@ -27,6 +24,18 @@ getCategory();
     // console.log(userID);
   });
 
+  $(document).on("click", "#cart", function(event){
+    event.preventDefault();
+
+    console.log("on click cart");
+    queryUrl = "api/viewCart/" + userID;
+  
+    $.get(queryUrl, function(data) {
+      console.log("Data:");
+      console.log(data);
+    });
+    // $(".numofItem").text(data);
+  });
   // A function to get categories and then render our list of Categories
   function getCategory() {
     console.log("inside user-data route");
@@ -45,7 +54,6 @@ getCategory();
     categorySelect.append(rowsToAdd);
   
   }
-
   // Creates the category options in the dropdown
   function createCategoryList(category) {
     
@@ -75,11 +83,8 @@ getCategory();
     //return categoryName;
   }
 
-  
 async function getAmazonData(keyword){
-
   console.log("keyword:" + keyword);
-
   const header = {
     "async": true,
     "crossDomain": true,
@@ -87,10 +92,9 @@ async function getAmazonData(keyword){
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-      "x-rapidapi-key": ""
+      "x-rapidapi-key": process_env_KEY
     }
   }
-
   await $.ajax(header).done(function (response) {
     generateItem(response);
 
@@ -101,7 +105,6 @@ async function getAmazonData(keyword){
 function generateNewCard(data) {
     
   let newItemCard = itemCard.clone();
-  
   //Item Details
   newItemCard.find(".title").html(data.title).text();
   newItemCard.find("#image").attr("src", data.image);
@@ -124,7 +127,7 @@ function generateItem(response) {
 
   });
 }
-$(document).on("click", ".bottom-wrap", itemCart);
+
 
 function itemCart(event) {
   event.preventDefault();
@@ -160,6 +163,8 @@ function itemCart(event) {
   });
 }
 
+//post request to add item into the cart
+
 function addToCart(item_name, item_price, item_quantity) {
   $.post("/api/cart", {
     item_name: item_name,
@@ -176,7 +181,8 @@ function addToCart(item_name, item_price, item_quantity) {
 }
 
 
-
+categorySelect.on("click", getCategoryValue);
+$(document).on("click", ".bottom-wrap", itemCart);
 
 
 
