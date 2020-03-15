@@ -2,6 +2,7 @@
 var categorySelect = $("#categoryList");
 var listOption;
 var itemCard = $("#item-container").clone();
+var cartListTemplate= $("#cartListItem").clone()
 var cartArray = [];
 // var addToCart = $(".bottom-wrap");
 
@@ -13,6 +14,7 @@ $(document).ready(function() {
   var userInput = categorySelect.val();
   var currency = $("#currency").val()
   $("#item-container").remove();
+  $("dropdown-cart").empty();
   getCategory();
 
   
@@ -30,10 +32,20 @@ $(document).ready(function() {
     console.log("on click cart");
     queryUrl = "api/viewCart/" + userID;
   
-    $.get(queryUrl, function(data) {
-      console.log("Data:");
+   // $.get(queryUrl, function(data) {
+      // console.log("Data:");
+      // console.log(data);
+      // Just setting value to test
+         var data = [
+            {"item_name":"Toy 1", "item_price":5.50},
+            {"item_name":"Toy 2", "item_price":10.50}
+          ];
+
       console.log(data);
-    });
+        
+      renderAddToCart(data);
+      
+    //});
     // $(".numofItem").text(data);
   });
   // A function to get categories and then render our list of Categories
@@ -69,7 +81,7 @@ $(document).ready(function() {
     return listOption;
   }
 
-});
+
 
   //function to get selected category
 
@@ -82,6 +94,8 @@ $(document).ready(function() {
     getAmazonData(categoryName);
     //return categoryName;
   }
+
+});
 
 async function getAmazonData(keyword){
   console.log("keyword:" + keyword);
@@ -178,6 +192,31 @@ function addToCart(item_name, item_price, item_quantity) {
     .catch(function(err) {
       console.log(err);
     });
+}
+
+//render list of items in cart
+
+function generateCartList(data){
+  cartList  = cartListTemplate.clone();
+  //Item Details
+  cartList.find(".cartItemName").html(data.item_name).text();
+  cartList.find(".cartItemPrice").html(data.item_price).text();
+  return cartList;
+
+}
+
+function renderAddToCart(response){
+  console.log("Inside rendercart");
+  console.log(response)
+  const results  = response;
+  results.forEach((item) => {
+    console.log("Item: ");
+      console.log(item);
+      //Make the card element from the NewGeneratdItem
+      let cartItem = generateCartList(item);
+      $(".dropdown-cart").prepend(cartItem);
+  });
+
 }
 
 
