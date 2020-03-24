@@ -82,7 +82,7 @@ $(document).ready(function() {
   }
 
 
-
+});
   //function to get selected category
 
   async function getCategoryValue(event){
@@ -92,10 +92,8 @@ $(document).ready(function() {
     var categoryName = $(event.target).text();
     console.log(categoryName);
     getAmazonData(categoryName);
-    //return categoryName;
+    // return categoryName;
   }
-
-});
 
 async function getAmazonData(keyword){
   console.log("keyword:" + keyword);
@@ -106,7 +104,7 @@ async function getAmazonData(keyword){
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-      "x-rapidapi-key": process_env_KEY
+      "x-rapidapi-key": process.env.KEY
     }
   }
   await $.ajax(header).done(function (response) {
