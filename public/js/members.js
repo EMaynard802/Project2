@@ -107,7 +107,7 @@ async function getAmazonData(keyword){
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-      "x-rapidapi-key": "2eb144d7f0msh71deafc40feda88p155f8bjsn974e3093c435"
+      "x-rapidapi-key": process.env.KEY
     }
   }
   await $.ajax(header).done(function (response) {
