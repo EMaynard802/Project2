@@ -1,6 +1,6 @@
 
 DROP DATABASE IF EXISTS passport_demo;
--- Creates the "todolist" database --
+-- Creates the "ShopWise" database --
 CREATE DATABASE passport_demo;
 
 USE passport_demo;
