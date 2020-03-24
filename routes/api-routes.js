@@ -141,36 +141,37 @@ app.get("/api/viewCart/:id", function (req, res){
   }).then(function(items)
     {
     console.log(items);
+    res.json(items);
     //  return  function (lineItem) 
     //   {
          
-         //var numOfItems = 0; 
-        for (var i = 0; i< items.rows.length; i++)
-        {
-          var lineItem = items.rows[i].item_price * items.rows[i].item_quantity;
-          console.log(lineItem);
-          db.LineItem.create({
-            lineNumber: i + 1,
-            itemDesc: items.rows[i].item_name,
-            unitPrice: items.rows[i].item_price,
-            quantity: items.rows[i].item_quantity,
-            subTotal: lineItem
-          }).then(function(newItems){
-            console.log("New list items: " + items)
-            itemList.push(newItems);
-            //res.json(items);
-            res.sendFile(path.join(__dirname, "../public/members.html"));
+      //    //var numOfItems = 0; 
+      //   for (var i = 0; i< items.rows.length; i++)
+      //   {
+      //     var lineItem = items.rows[i].item_price * items.rows[i].item_quantity;
+      //     console.log(lineItem);
+      //     db.LineItem.create({
+      //       lineNumber: i + 1,
+      //       itemDesc: items.rows[i].item_name,
+      //       unitPrice: items.rows[i].item_price,
+      //       quantity: items.rows[i].item_quantity,
+      //       subTotal: lineItem
+      //     }).then(function(newItems){
+      //       console.log("New list items: " + items)
+      //       itemList.push(newItems);
+      //       //res.json(items);
+      //       res.sendFile(path.join(__dirname, "../public/members.html"));
 
-          })
-          //res.json(itemList);
-        }
+      //     })
+      //     //res.json(itemList);
+      //   }
         
-        //return lineItemPrice;
-        //console.log(items.rows[0].item_quantity)
-        //res.json(itemList);
-        //res.parseInt(items.count + items.rows.item_quantity);
-      //};
-      return;
+      //   //return lineItemPrice;
+      //   //console.log(items.rows[0].item_quantity)
+      //   //res.json(itemList);
+      //   //res.parseInt(items.count + items.rows.item_quantity);
+      // //};
+      // return;
     });
     //res.json(itemList);
 });
