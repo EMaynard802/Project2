@@ -17,7 +17,11 @@ $(document).ready(function() {
   $("dropdown-cart").empty();
   getCategory();
 
-  
+  function getCategory() {
+    console.log("inside user-data route");
+    $.get("/api/category", renderCategoryList);
+  }
+
   $.get("/api/user_data").then(function(data) {
     $(".member-name").text(data.email);
     
@@ -30,29 +34,26 @@ $(document).ready(function() {
     event.preventDefault();
 
     console.log("on click cart");
-    queryUrl = "api/viewCart/" + userID;
+    queryUrl = "/api/viewCart/" + userID;
   
-   // $.get(queryUrl, function(data) {
-      // console.log("Data:");
-      // console.log(data);
+   $.get(queryUrl, function(data) {
+      console.log("Data:");
+      console.log(data);
       // Just setting value to test
-         var data = [
-            {"item_name":"Toy 1", "item_price":5.50},
-            {"item_name":"Toy 2", "item_price":10.50}
-          ];
+        //  var data = [
+        //     {"item_name":"Toy 1", "item_price":5.50},
+        //     {"item_name":"Toy 2", "item_price":10.50}
+        //   ];
 
       console.log(data);
-        
       renderAddToCart(data);
       
     //});
     // $(".numofItem").text(data);
+    });
   });
   // A function to get categories and then render our list of Categories
-  function getCategory() {
-    console.log("inside user-data route");
-    $.get("/api/category", renderCategoryList);
-  }
+  
 
   // Function to render a list of categories
   function renderCategoryList(data) {
@@ -82,7 +83,9 @@ $(document).ready(function() {
   }
 
 
-});
+  });
+
+
   //function to get selected category
 
   async function getCategoryValue(event){
@@ -104,7 +107,7 @@ async function getAmazonData(keyword){
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "amazon-price1.p.rapidapi.com",
-      "x-rapidapi-key": process.env.KEY
+      "x-rapidapi-key": "2eb144d7f0msh71deafc40feda88p155f8bjsn974e3093c435"
     }
   }
   await $.ajax(header).done(function (response) {
@@ -217,27 +220,5 @@ function renderAddToCart(response){
 
 }
 
-
 categorySelect.on("click", getCategoryValue);
 $(document).on("click", ".bottom-wrap", itemCart);
-
-
-
-
-
-      
-   
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
